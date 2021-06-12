@@ -1,0 +1,23 @@
+{
+    "name": "roorda-ict/statamic-entries-export",
+    "autoload": {
+        "psr-4": {
+            "RoordaIct\\EntriesExport\\": "src"
+        }
+    },
+    "extra": {
+        "statamic": {
+            "name": "Statamic Entries Export",
+            "description": "Export collection entries to Excel."
+        },
+        "laravel": {
+            "providers": [
+                "RoordaIct\\EntriesExport\\ServiceProvider"
+            ]
+        }
+    },
+    "require": {
+        "php": "^7.4 || ^8.0",
+        "maatwebsite/excel": "^3.1"
+    }
+}
