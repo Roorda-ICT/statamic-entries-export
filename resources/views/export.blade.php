@@ -7,9 +7,9 @@
     </div>
 
     <div class="mt-3 card">
-        {{ __('Select the collection you wish to export.') }}
+        <p class="mb-1">{{ __('Select the collection you wish to export:') }}</p>
 
-        <form type="POST" action="{{ cp_route('utilities.entries-export.download') }}">
+        <form method="POST" action="{{ cp_route('utilities.entries-export.download') }}">
             @csrf
 
             <div class="select-input-container relative w-full">
@@ -24,7 +24,11 @@
                 <svg-icon name="chevron-down-xs" class="absolute inset-y-0 right-0 w-2 h-full mr-1.5 pointer-events-none"></svg-icon>
             </div>
 
-            <button class="btn-primary ml-1">{{ __('Export entries') }}</button>
+            @error('collection')
+                <p class="text-red text-xs mt-1">{{ $message }}</p>
+            @enderror
+
+            <button type="submit" class="btn-primary mt-2">{{ __('Export entries') }}</button>
         </form>
     </div>
 @stop

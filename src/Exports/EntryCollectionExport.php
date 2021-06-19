@@ -11,10 +11,12 @@ use Maatwebsite\Excel\Concerns\Exportable;
 use Maatwebsite\Excel\Concerns\FromCollection;
 use Maatwebsite\Excel\Concerns\WithHeadings;
 use Statamic\Auth\User;
+use Statamic\Contracts\Assets\Asset;
 use Statamic\Contracts\Entries\Entry;
 use Statamic\Contracts\Taxonomies\Term;
 use Statamic\Fields\Field;
 use Statamic\Fields\Value;
+use Statamic\Fields\LabeledValue;
 
 class EntryCollectionExport implements FromCollection, WithHeadings
 {
@@ -81,7 +83,6 @@ class EntryCollectionExport implements FromCollection, WithHeadings
 
         // Transform every entry into an array with the entry values.
         return $this->collection->map(function (\Statamic\Entries\Entry $entry) use ($headings) {
-
             // Map every heading to the corresponding value for this entry.
             return $headings->map(function ($heading) use ($entry) {
                 $value = $entry->augmentedValue($heading);
@@ -104,6 +105,7 @@ class EntryCollectionExport implements FromCollection, WithHeadings
             $value = $value->value();
         }
 
+
         if ($value instanceof Carbon) {
             return $value->format('d-m-Y H:i');
         }
@@ -120,6 +122,14 @@ class EntryCollectionExport implements FromCollection, WithHeadings
             return $value->title();
         }
 
+        if ($value instanceof LabeledValue) {
+            return $value->label();
+        }
+
+        if ($value instanceof Asset) {
+            return $value->url();
+        }
+
         if (is_null($value) || is_scalar($value)) {
             return $value;
         }
@@ -128,7 +138,7 @@ class EntryCollectionExport implements FromCollection, WithHeadings
             return json_encode($value);
         }
 
-        Log::warning('[EntryCollectionExport] unhandled value', ['value' => $value]);
+        Log::warning('[EntryCollectionExport] unhandled value', ['value' => $value, 'type' => gettype($value)]);
 
         return $value;
     }
@@ -152,11 +162,13 @@ class EntryCollectionExport implements FromCollection, WithHeadings
     public function getFileName(): string
     {
         $entry = $this->collection->first();
+        $format = config('entries-export.export_format');
 
         return sprintf(
-            '%s export %s.xlsx',
+            '%s export %s.%s',
             $entry->collection()->title(),
-            Carbon::now()->toDateTimeString()
+            Carbon::now()->toDateTimeString(),
+            $format,
         );
     }
 }

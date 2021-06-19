@@ -8,9 +8,12 @@ use Illuminate\Support\Collection;
 use Statamic\Actions\Action;
 use Statamic\Entries\Entry;
 use RoordaIct\EntriesExport\Exports\EntryCollectionExport;
+use Statamic\Support\Str;
 
 class ExportAction extends Action
 {
+    protected static $title = 'Export';
+
     /**
      * Only allow exporting of entries.
      *
@@ -29,7 +32,8 @@ class ExportAction extends Action
      */
     public function authorize($user, $item): bool
     {
-        return $user->can(config('entries-export.permission'), $item);
+        return $user->can('access export-entries utility')
+            && $user->can(config('entries-export.permission'), $item);
     }
 
     /**
@@ -55,7 +59,7 @@ class ExportAction extends Action
         return 'Export entry|Export :count entries';
     }
 
-    public function warningText()
+    public function confirmationText()
     {
         return 'Are you sure you want to export this entry?|Are you sure you want to export :count entries?';
     }

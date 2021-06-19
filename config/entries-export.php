@@ -4,10 +4,19 @@ declare(strict_types=1);
 
 return [
     /**
-     * The class responsible for converting the Entries into an array of values that get exported.
-     * If you create your own implementation, make sure to extend the EntryCollectionExport.
+     * The permission necessary to be able to export the entry. This gets passed to the gate,
+     * by default this would be the ability to 'view' the entry. For example you might only
+     * want to let people export entries that can 'update' them.
      */
-    'exporter' => \RoordaIct\EntriesExport\Exports\EntryCollectionExport::class,
+    'permission' => 'view',
+
+    /**
+     * The export format to which the entries should be exported.
+     * Possible values: 'xlsx', 'csv', 'ods', 'html'
+     *
+     * See also: https://docs.laravel-excel.com/3.1/exports/export-formats.html
+     */
+    'export_format' => 'ods',
 
     /**
      * The handles of the field types that should be skipped when exporting.
@@ -16,9 +25,10 @@ return [
     'excluded_field_types' => ['section', 'hidden'],
 
     /**
-     * The permission necessary to be able to export the entry. This gets passed to the gate,
-     * by default this would be the ability to 'view' the entry. For example you might only
-     * want to let people export entries that can 'update' them.
+     * The class responsible for converting the Entries into an array of values that get exported.
+     * If you create your own implementation, make sure to extend the EntryCollectionExport.
+     *
+     * See also: https://docs.laravel-excel.com/3.1/exports
      */
-    'permission' => 'view',
+    'exporter' => \RoordaIct\EntriesExport\Exports\EntryCollectionExport::class,
 ];

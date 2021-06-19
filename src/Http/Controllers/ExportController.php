@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace RoordaIct\Http\Controllers;
+namespace RoordaIct\EntriesExport\Http\Controllers;
 
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\Request;
@@ -16,7 +16,7 @@ class ExportController
 
     public function index()
     {
-        $this->authorize('access entries export utility');
+        $this->authorize('access entries-export utility');
 
         return view('entries-export::export', [
             'collections' => Collection::all(),
@@ -30,14 +30,14 @@ class ExportController
      */
     public function download(Request $request)
     {
-        $this->authorize('access entries export utility');
+        $this->authorize('access entries-export utility');
 
         $collection = Collection::find($request->input('collection'));
 
         if (!$collection) {
-            throw ValidationException::withMessages(['collection' => [
-                __('Please choose a valid collection'),
-            ]]);
+            throw ValidationException::withMessages([
+                'collection' => __('Please choose a valid collection.'),
+            ]);
         }
 
         /** @var EntryCollectionExport $export */
