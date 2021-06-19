@@ -1,4 +1,5 @@
-# Statamic Entries Export
+![Banner](https://raw.githubusercontent.com/roorda-ict/statamic-entries-export/master/banner.png)
+
 This is a simple package that exports your entries to xlsx/csv/ods/html format.
 
 ## Features
