@@ -16,6 +16,7 @@ composer require roorda-ict/statamic-entries-export
 
 ## Usage
 Usage is pretty easy:
+
 - **For a subset of entries**: navigate to a collection listing and start exporting entries.
 - **For an entire collection of entries**: go to Utilities > Export entries, choose your collection and click the 'Export entries' button.
 
