@@ -38,7 +38,7 @@ For example, you might only want to let users export the entries that they may `
 To do this you update the value of the `permission` key from `view` to `update` in the configuration file.
 
 ### Export format
-By default, we export to the `xlsx` format, however you can configure this to any supported format.
+By default, we export to the `ods` format, however you can configure this to any supported format.
 The supported formats are found in the configuration file, at the `export_format` key.
 
 ### Excluding field types
