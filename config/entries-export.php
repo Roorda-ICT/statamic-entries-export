@@ -22,7 +22,11 @@ return [
      * The handles of the field types that should be skipped when exporting.
      * If you need finer-grained control of this create a custom exporter.
      */
-    'excluded_field_types' => ['section', 'hidden'],
+    'excluded_field_types' => [
+        'section',
+        'hidden',
+        'spacer',
+    ],
 
     /**
      * The class responsible for converting the Entries into an array of values that get exported.

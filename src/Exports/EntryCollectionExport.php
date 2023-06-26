@@ -12,8 +12,9 @@ use Maatwebsite\Excel\Concerns\FromCollection;
 use Maatwebsite\Excel\Concerns\WithHeadings;
 use Statamic\Auth\User;
 use Statamic\Contracts\Assets\Asset;
-use Statamic\Contracts\Entries\Entry;
+use Statamic\Contracts\Entries\Entry as EntryContract;
 use Statamic\Contracts\Taxonomies\Term;
+use Statamic\Entries\Entry;
 use Statamic\Fields\Field;
 use Statamic\Fields\Value;
 use Statamic\Fields\LabeledValue;
@@ -32,7 +33,7 @@ class EntryCollectionExport implements FromCollection, WithHeadings
      */
     public function setItems(Collection $items): EntryCollectionExport
     {
-        $notAllEntries = $items->some(fn($entry) => !($entry instanceof Entry));
+        $notAllEntries = $items->some(fn($entry) => !($entry instanceof EntryContract));
 
         if ($notAllEntries) {
             throw new \InvalidArgumentException('Collection export expects a collection of entries.');
@@ -50,12 +51,12 @@ class EntryCollectionExport implements FromCollection, WithHeadings
      */
     public function fields(): Collection
     {
-        /** @var \Statamic\Entries\Entry $entry */
+        /** @var Entry $entry */
         $entry = $this->collection->first();
 
         return $entry->blueprint()
-            ->sections()
-            ->flatMap(fn($section) => $section->fields()->all())
+            ->fields()
+            ->all()
             ->filter(fn(Field $field) => $this->shouldFieldBeIncluded($field));
     }
 
@@ -82,7 +83,7 @@ class EntryCollectionExport implements FromCollection, WithHeadings
         $headings = $this->fields()->keys();
 
         // Transform every entry into an array with the entry values.
-        return $this->collection->map(function (\Statamic\Entries\Entry $entry) use ($headings) {
+        return $this->collection->map(function (EntryContract $entry) use ($headings) {
             // Map every heading to the corresponding value for this entry.
             return $headings->map(function ($heading) use ($entry) {
                 $value = $entry->augmentedValue($heading);
@@ -100,17 +101,20 @@ class EntryCollectionExport implements FromCollection, WithHeadings
      */
     private function toString($value)
     {
-        // It's an augmented value, unpack it so we can use it.
+        // It's an augmented value, unpack it, so we can use it.
         if ($value instanceof Value) {
             $value = $value->value();
         }
 
+        if (is_string($value)) {
+            return $value;
+        }
 
         if ($value instanceof Carbon) {
             return $value->format('d-m-Y H:i');
         }
 
-        if ($value instanceof Entry) {
+        if ($value instanceof EntryContract) {
             return $value->get('title');
         }
 
@@ -130,7 +134,15 @@ class EntryCollectionExport implements FromCollection, WithHeadings
             return $value->url();
         }
 
-        if (is_null($value) || is_scalar($value)) {
+        if (is_null($value)) {
+            return '';
+        }
+
+        if (is_bool($value)) {
+            return $value ? 'yes' : 'no';
+        }
+
+        if (is_numeric($value)) {
             return $value;
         }
 
@@ -161,6 +173,7 @@ class EntryCollectionExport implements FromCollection, WithHeadings
      */
     public function getFileName(): string
     {
+        /** @var EntryContract $entry */
         $entry = $this->collection->first();
         $format = config('entries-export.export_format');
 

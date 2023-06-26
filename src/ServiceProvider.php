@@ -32,16 +32,15 @@ class ServiceProvider extends AddonServiceProvider
         ]);
 
         $this->app->booted(function () {
-            Utility::make('entries-export')
-                ->icon('list')
+            Utility::register('entries-export')
                 ->title('Export entries')
+                ->icon('list')
                 ->navTitle('Export')
                 ->description('Export an entire collection to Excel format.')
                 ->routes(function ($router) {
                     $router->get('/', [ExportController::class, 'index'])->name('index');
                     $router->post('/', [ExportController::class, 'download'])->name('download');
-                })
-                ->register();
+                });
         });
 
         parent::boot();
