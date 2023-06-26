@@ -13,8 +13,10 @@ use Maatwebsite\Excel\Concerns\WithHeadings;
 use Statamic\Auth\User;
 use Statamic\Contracts\Assets\Asset;
 use Statamic\Contracts\Entries\Entry as EntryContract;
+use Statamic\Contracts\Query\Builder as BuilderContract;
 use Statamic\Contracts\Taxonomies\Term;
 use Statamic\Entries\Entry;
+use Statamic\Entries\EntryCollection;
 use Statamic\Fields\Field;
 use Statamic\Fields\Value;
 use Statamic\Fields\LabeledValue;
@@ -104,6 +106,16 @@ class EntryCollectionExport implements FromCollection, WithHeadings
         // It's an augmented value, unpack it, so we can use it.
         if ($value instanceof Value) {
             $value = $value->value();
+        }
+
+        if ($value instanceof BuilderContract) {
+            $value = $value->get();
+        }
+
+        if ($value instanceof EntryCollection) {
+            return $value
+                ->map(fn(EntryContract $entry) => $entry->get('title'))
+                ->join(', ');
         }
 
         if (is_string($value)) {
