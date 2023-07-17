@@ -32,7 +32,8 @@ class ExportAction extends Action
     public function authorize($user, $entry): bool
     {
         return $user->can('access entries-export utility')
-            && $user->can(config('entries-export.permission'), $entry);
+            && $user->can(config('entries-export.permission'), $entry)
+            && !in_array($entry->collectionHandle(), config('entries-export.excluded_collections', []));
     }
 
     /**

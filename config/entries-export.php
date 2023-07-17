@@ -5,8 +5,8 @@ declare(strict_types=1);
 return [
     /**
      * The permission necessary to be able to export the entry. This gets passed to the gate,
-     * by default this would be the ability to 'view' the entry. For example you might only
-     * want to let people export entries that can 'update' them.
+     * by default this would be the ability to 'view' the entry. For example, you might
+     * want to let people export entries that they can 'edit' instead of 'view'.
      */
     'permission' => 'view',
 
@@ -27,6 +27,11 @@ return [
         'hidden',
         'spacer',
     ],
+
+    /**
+     * The handles of the collections that you don't want to allow users to export.
+     */
+    'excluded_collections' => [],
 
     /**
      * The class responsible for converting the Entries into an array of values that get exported.
