@@ -25,7 +25,7 @@
             </div>
 
             @error('collection')
-                <p class="text-red text-xs mt-1">{{ $message }}</p>
+                <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
             @enderror
 
             <button type="submit" class="btn-primary mt-2">{{ __('Export entries') }}</button>
