@@ -45,6 +45,9 @@ The supported formats are found in the configuration file, at the `export_format
 By default, we do not export the `section` and `hidden` field types.
 If you need to add or remove field types, update the value of the `excluded_field_types` key in the configuration file.
 
+### Excluding collections
+If you want to exclude certain collections from being exported, you can add them to the `excluded_collections` key in the configuration file.
+
 ### Custom exporter
 If you want more control in how your export is generated, you can create your own exporter.
 Make sure to extend the `RoordaIct\EntriesExport\Exports\EntryCollectionExport` class.
