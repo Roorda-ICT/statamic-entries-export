@@ -8,7 +8,6 @@ use Illuminate\Support\Collection;
 use Statamic\Actions\Action;
 use Statamic\Entries\Entry;
 use RoordaIct\EntriesExport\Exports\EntryCollectionExport;
-use Statamic\Support\Str;
 
 class ExportAction extends Action
 {
@@ -27,13 +26,13 @@ class ExportAction extends Action
 
     /**
      * @param $user
-     * @param $item
+     * @param $entry
      * @return bool
      */
-    public function authorize($user, $item): bool
+    public function authorize($user, $entry): bool
     {
-        return $user->can('access export-entries utility')
-            && $user->can(config('entries-export.permission'), $item);
+        return $user->can('access entries-export utility')
+            && $user->can(config('entries-export.permission'), $entry);
     }
 
     /**
